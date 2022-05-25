@@ -66,6 +66,18 @@ app.post("/api/persons", (request, response) => {
   
   const body = request.body
 
+  if (!body.number) {
+    return response.status(404).json({
+      error: "you didn't inform any number"
+    })
+  }
+
+  if(persons.find(person => person.name === body.name)){
+    return response.status(404).json({
+      error: "name already exists"
+    })
+  }
+
   const person = {
     id: generateId(),
     name: body.name,
