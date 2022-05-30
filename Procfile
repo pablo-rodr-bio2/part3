@@ -1,1 +1,1 @@
-web: npms tart
+web: npms start
