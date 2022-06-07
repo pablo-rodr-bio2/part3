@@ -16,12 +16,15 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.get("/info", (request, response) => {
   const today = new Date()
-  response.send(
-    `<div>
-      <div>Phonebook has info for ${persons.length} persons</div>
-      <div>${today}</div>
-     </div>`
-  )
+  Person.find({}).then(persons => {
+    response.send(
+      `<div>
+        <div>Phonebook has info for ${persons.length} persons</div>
+        <div>${today}</div>
+       </div>`
+    )
+  })
+ 
 })
 
 app.get("/api/persons", (request, response) => {
@@ -31,14 +34,12 @@ app.get("/api/persons", (request, response) => {
 })
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find( person => person.id === id )
-  if(person) {
-    console.log("Request person: ", person)
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  Person
+    .findById(request.params.id)
+    .then(person => {
+        response.json(person)
+      }
+    )
 })
 
 app.delete("/api/persons/:id", (request, response) => {
@@ -62,21 +63,24 @@ app.post("/api/persons", (request, response) => {
     })
   }
 
-  if(persons.find(person => person.name === body.name)){
-    return response.status(404).json({
-      error: "name already exists"
-    })
-  }
+  // if(persons.find(person => person.name === body.name)){
+  //   return response.status(404).json({
+  //     error: "name already exists"
+  //   })
+  // }
 
-  const person = {
-    id: generateId(),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  }
+  })
 
-  persons = persons.concat(person)
-
-  response.json(person)
+  person
+    .save()
+    .then(
+      savedPerson => {
+        response.json(savedPerson)
+      }
+    )
 })
 
 const PORT = process.env.PORT || 3001
