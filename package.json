@@ -10,7 +10,8 @@
     "build:ui": "rm -rf build && cd ../phonebook-frontend/ && npm run build && cp -r build ../part3",
     "deploy": "git push heroku HEAD:main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "author": "Pablo Rodriguez",
   "license": "MIT",
@@ -21,5 +22,8 @@
     "mongoose": "^6.3.5",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.16"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0"
   }
 }

@@ -18,26 +18,26 @@ const Person = mongoose.model('Person', personSchema)
 
 mongoose
   .connect(url)
-  .then((result) => {
-    if (process.argv.length == 3) {
+  .then(() => {
+    if (process.argv.length === 3) {
       Person
-      .find({})
-      .then(result => {
-        console.log('phonebook: ')
-        result.forEach(person => {
-          console.log(person.name + " " + person.number)
+        .find({})
+        .then(result => {
+          console.log('phonebook: ')
+          result.forEach(person => {
+            console.log(person.name + ' ' + person.number)
+          })
+          mongoose.connection.close()
         })
-        mongoose.connection.close()
-      })
     } else {
-      const person = new Person ({
+      const person = new Person({
         name: process.argv[3],
         number: process.argv[4],
       })
       person
         .save()
         .then(() => {
-          console.log ("added ", person.name, person.number)
+          console.log('added ', person.name, person.number)
           mongoose.connection.close()
         })
     }
